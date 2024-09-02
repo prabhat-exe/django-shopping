@@ -1,0 +1,14 @@
+
+{% extends "admin_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="container">
+  <h2>Delete Product</h2>
+  <p>Are you sure you want to delete the product <strong>{{ product.pname }}</strong>?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'view_product' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock dashboard_content %}

@@ -1,0 +1,29 @@
+{% extends "master.html" %}
+
+{% block connect %}
+<style>
+    .list-group-item {
+        background-color: lightblue;
+    }
+</style>
+
+<div class="container-fluid  " style=" background-color: lightblue;">
+<div class="row">
+    <div class="col-md-3  my-4">
+        <div class="list-group">
+            <a href="{% url 'add_section' %}" class="list-group-item list-group-item-action">Add Section</a>
+            <a href="{% url 'view_product' %}" class="list-group-item list-group-item-action">View Products</a>
+            <a href="{% url 'add_product' %}" class="list-group-item list-group-item-action">Add Product</a>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <!-- Main content area for dashboard -->
+        {% block dashboard_content %}{% endblock %}
+    </div>
+</div>
+</div>
+{% block script_content %}
+{% endblock %}
+{% endblock connect %}
+
+

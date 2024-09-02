@@ -1,0 +1,91 @@
+{% extends "umaster.html" %}
+
+{% load static %}
+{% load myfilter %}
+
+{% block connect %}
+{% if msg %}
+<div class="alert alert-warning mt-4" role="alert">
+  {{msg}}
+</div>
+{% endif %}
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Category list on the left side -->
+    <div class="col-md-3 col-12">
+      <h3 class="mt-4">Categories</h3>
+      <ul class="list-group">
+        
+        {% for category in categories %}        
+        <form action="" method="POST" style="margin-bottom: 10px;">
+          {% csrf_token %}
+          <input type="hidden" name="cvalue" value="{{ category.id }}">
+          <button type="submit" class="list-group-item list-group-item-action">{{ category.name }}</button>
+        </form>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Products on the right side -->
+    <div class="col-md-9 col-12 mx-0">
+      <div class="row">
+      {% if obj %}
+        {% for product in obj %}
+          <div class="col-md-4">
+            <div class="card my-3 mx-0">
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.pname }}" height="400">
+              <div class="card-body">
+                <h5 class="card-title">{{ product.pname }}</h5>
+                <p class="card-text">{{ product.des }}</p>
+                <div class="d-flex justify-content-between">
+                  <p class="card-text">&#8377; {{ product.price }}</p>
+                  {% if request.session.cart %}
+                  {% if request.session.cart|get_cart_quantity:product.id %}
+                  <p class="card-text">{{ request.session.cart|get_cart_quantity:product.id }}</p>
+                  {% endif %}
+                  {% endif %}
+                </div>
+                {% if product.id|Checkbutton:request.session.cart %}
+                <div class="d-flex justify-content-between">
+                  <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="pluse" value="{{ product.id }}">
+                    <input type="submit" class="btn btn-primary btn-sm" value="+">
+                  </form>
+                  <form action="{% url 'cart' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="pro_id" value="{{ product.id }}">
+                    <input type="submit" class="btn btn-primary btn-sm " value="view cart">
+                  </form>
+                  <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="minus" value="{{ product.id }}">
+                    <input type="submit" class="btn btn-primary btn-sm" value="-">
+                  </form>
+                </div>
+                {% else %}
+                <form action="{% url 'home' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="pro_id" value="{{ product.id }}">
+                  <input type="submit" class="btn btn-primary btn-sm my-1" value="Add to Cart">
+                </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          
+        {% endfor %}
+        
+      {% else %}
+
+      <div class="col-md-9 col-12 mx-0" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <img src="{% static 'empty_cart.jpg' %}" alt="">
+      </div>
+      
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock connect %}

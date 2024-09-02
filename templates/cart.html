@@ -1,0 +1,77 @@
+{% extends "umaster.html" %}
+
+{% load static %}
+{% load myfilter %}
+
+{% block connect %}
+
+{% if products %}
+<table class="table table-blue table-striped my-4 mx-2">
+  <thead>
+    <tr class="bg-warning">
+      <th scope="col">Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Image</th>
+      <th scope="col">Action</th>
+      <th scope="col">Sub total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for prod in products %}
+    <tr>
+      <td>{{ prod.pname }}</td>
+      <td>{{ prod.price }}</td>
+      <td>{{ request.session.cart|get_cart_quantity:prod.id }}</td>
+      <td><img src="{{ prod.image.url }}" alt="" height="100" width="100"></td>
+      <td style="display: flex; align-items: center;">
+
+        <form action="{% url 'cart' %}" method="post" style="margin-right: 5px;">
+          {% csrf_token %}
+          <input type="hidden" name="pluse" value="{{ prod.id }}">
+          <input type="submit" class="btn btn-primary btn-sm" value="+">
+        </form>
+
+        <form action="{% url 'cart' %}" method="post" style="margin-right: 5px;">
+          {% csrf_token %}
+          <input type="hidden" name="minus" value="{{ prod.id }}">
+          <input type="submit" class="btn btn-primary btn-sm" value="-">
+        </form>
+
+        <form action="{% url 'cart' %} " method="post">
+          {% csrf_token %}
+          <input type="hidden" name="delete" id="delete" value="{{ prod.id }}">
+          <input type="submit" class="btn btn-danger" value="Delete">
+        </form>
+
+      </td>
+      <td>
+        {{ request.session.cart|get_total:prod.id }}
+      </td> 
+    </tr>
+    {% endfor %}
+    <tr>
+      <td colspan="6" style="text-align: center;">
+        <div>
+          <span>Total: {{ request.session.cart|grand_total }}</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="6" style="text-align: center;">
+        <form action="{% url 'cart' %} " method="post">
+          {% csrf_token %}
+          <input type="hidden" name="chk_out" value="hi">
+          <input type="submit" class="btn btn-primary" value="CHECK OUT">
+        </form>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{% else %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+  <img src="{% static 'empty_cart.jpg' %}" alt="">
+</div>
+{% endif %}
+{% endblock connect %}
