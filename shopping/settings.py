@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'shopping.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'cart',
+        'NAME':'prabhat880898$cart',
         'USER':'root',
         'PASSWORD':'root',
-        'HOST':'localhost',
+        'HOST':'prabhat880898.mysql.pythonanywhere-services.com',
         'PORT':'3307',
     }
 }
